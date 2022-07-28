@@ -1,0 +1,36 @@
+{
+  "name": "twilio-segment-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "parcel build src/index.html -d dist",
+    "postbuild": "ncp assets dist",
+    "predeploy": "npm run build",
+    "deploy": "twilio-run deploy",
+    "start:web": "parcel watch src/index.html -d dist",
+    "start:twilio": "twilio-run",
+    "prestart": "ncp assets dist",
+    "start": "concurrently npm:start:web npm:start:twilio"
+  },
+  "dependencies": {
+    "twilio": "^3.56",
+    "@twilio/runtime-handler": "1.2.3"
+  },
+  "devDependencies": {
+    "@twilio-paste/core": "^14.1.0",
+    "@twilio-paste/icons": "^8.1.0",
+    "@twilio-paste/theme": "^7.0.2",
+    "concurrently": "^7.3.0",
+    "ncp": "^2.0.0",
+    "parcel-bundler": "^1.12.5",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^3.0.2",
+    "twilio-run": "^3.4.2"
+  },
+  "engines": {
+    "node": "14"
+  }
+}
