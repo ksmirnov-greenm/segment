@@ -7,9 +7,15 @@ import { PatientModel } from "./models/patient.model";
 export default function App() {
 	
 	const [patient, setPatient] = useState(new PatientModel());
+	const [loading, setLoading] = useState(false);
 	
 	const submit = () => {
-		window.analytics.identify(patient);
+		setLoading(true);
+		window.analytics.identify(patient)
+			.then((res) => {
+				setLoading(false)
+				setPatient(new PatientModel());
+			});
 	}
 	
 	const updatePatient = (newValue) => {
@@ -32,31 +38,31 @@ export default function App() {
 						justifyContent="space-between"
 					>
 						<div>
-							<Label htmlFor="patient_name" required>Name</Label>
+							<Label htmlFor="patient_first_name" required>First Name</Label>
 							<Input
 								aria-describedby="patient_help_text"
-								id="patient_name"
-								name="patient_name"
+								id="patient_first_name"
+								name="patient_first_name"
 								type="text"
 								placeholder="John"
-								value={patient.name}
-								onChange={(event) => updatePatient({ name: event.target.value })}
+								value={patient.firstName}
+								onChange={(event) => updatePatient({ firstName: event.target.value })}
 								required/>
-							<HelpText id="patient_help_text">Enter your name</HelpText>
+							<HelpText id="patient_help_text">Enter your first name</HelpText>
 						</div>
 						
 						<div>
-							<Label htmlFor="patient_family_name" required>Family Name</Label>
+							<Label htmlFor="patient_last_name" required>Last Name</Label>
 							<Input
-								aria-describedby="family_name_help_text"
-								id="patient_family_name"
-								name="patient_family_name"
+								aria-describedby="last_name_help_text"
+								id="patient_last_name"
+								name="patient_last_name"
 								type="text"
 								placeholder="Doe"
-								value={patient.familyName}
-								onChange={(event) => updatePatient({ familyName: event.target.value })}
+								value={patient.lastName}
+								onChange={(event) => updatePatient({ lastName: event.target.value })}
 								required/>
-							<HelpText id="family_name_help_text">Enter your family name</HelpText>
+							<HelpText id="last_name_help_text">Enter your family name</HelpText>
 						</div>
 						
 						<div>
@@ -79,7 +85,7 @@ export default function App() {
 							value="allowSms"
 							name="allowSms"
 							checked={patient.allowSms}
-							onChange={(event) => updatePatient({ allowSms: event.target.value })}
+							onChange={(event) => updatePatient({ allowSms: event.target.checked })}
 						>
 							Allow to send sms
 						</Checkbox>
@@ -88,7 +94,8 @@ export default function App() {
 						<Button
 							variant="primary"
 							onClick={submit}
-							disabled={!patient.name && !patient.familyName && !patient.dob}
+							disabled={!patient.firstName && !patient.lastName && !patient.dob}
+							loading={loading}
 						>
 							Submit
 						</Button>

@@ -1,8 +1,8 @@
 import {OPEN_EMR_STATE_VALUES} from "./constants";
 
 export class PatientModel {
-	name = '';
-	familyName = '';
+	firstName = '';
+	lastName = '';
 	dob = '';
 	allowSms = true;
 	allowEmail = OPEN_EMR_STATE_VALUES.unassigned;
