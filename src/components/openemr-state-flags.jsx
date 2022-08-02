@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Radio, RadioGroup } from "@twilio-paste/core";
 import {OPEN_EMR_STATE_VALUES} from "../models/constants";
 import {v4 as uuidV4} from 'uuid';
@@ -17,19 +17,17 @@ const Styles = styled.div`
 
 export const OpenEmrStateFlags = ({
   text,
-  selectedValue = 'yes',
+  selectedValue = OPEN_EMR_STATE_VALUES.unassigned,
   onSelectedChange = () => {}
 }) => {
-	const [value, setValue] = useState(selectedValue);
 	
 	return (
 		<Styles>
 			<RadioGroup
 				name={text}
 				legend={text}
-				value={value}
+				value={selectedValue}
 				onChange={newValue => {
-					setValue(newValue);
 					onSelectedChange(newValue);
 				}}
 			>

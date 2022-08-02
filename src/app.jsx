@@ -1,5 +1,17 @@
-import React, { useState } from 'react';
-import {Box, Button, Checkbox, Flex, Heading, HelpText, Input, Label} from "@twilio-paste/core";
+import React, { useEffect, useState } from 'react';
+import {
+	Box,
+	Button,
+	Flex,
+	Heading,
+	HelpText,
+	Input,
+	Label,
+	Spinner,
+	Combobox,
+	MediaObject,
+	MediaBody, Text
+} from "@twilio-paste/core";
 import { Theme } from '@twilio-paste/theme';
 import { OpenEmrStateFlags } from "./components/openemr-state-flags";
 import { PatientModel } from "./models/patient.model";
@@ -7,14 +19,19 @@ import { PatientModel } from "./models/patient.model";
 export default function App() {
 	
 	const [patient, setPatient] = useState(new PatientModel());
+	const [patientsCollection, setPatientsCollection] = useState([]);
+	const [value, setValue] = React.useState('');
+	
+	const [loadPatients, setLoadPatients] = useState(false);
 	const [loading, setLoading] = useState(false);
 	
 	const submit = () => {
 		setLoading(true);
+		console.log('patient', patient);
 		window.analytics.identify(patient)
-			.then((res) => {
+			.then(() => {
 				setLoading(false)
-				setPatient(new PatientModel());
+				// setPatient(new PatientModel());
 			});
 	}
 	
@@ -22,12 +39,26 @@ export default function App() {
 		setPatient(Object.assign({}, patient, newValue))
 	}
 	
+	useEffect(() => {
+		setLoadPatients(true);
+		fetch('/patients')
+			.then(res => res.json())
+			.then(({ patients }) => {
+				console.log('patient response', patients);
+				setPatientsCollection(patients)
+				setLoadPatients(false);
+			})
+	}, []);
+	
 	return (
 		<Theme.Provider>
+			
 			<Flex marginTop={"space100"} hAlignContent="center" vertical>
 				<Heading as="h2" variant="heading20" padding="space40">Patient Info</Heading>
+				{loadPatients && <p>Load patients collection</p>}
+				{loadPatients && <Spinner size="sizeIcon110" decorative={false} title="Loading" />}
 			</Flex>
-			<Flex margin="auto" width={"800px"}>
+			{!loadPatients && <Flex margin="auto" width={"800px"}>
 				<Flex>
 					<Box
 						padding="space40"
@@ -37,6 +68,31 @@ export default function App() {
 						flexDirection="column"
 						justifyContent="space-between"
 					>
+						
+						<Combobox
+							items={patientsCollection}
+							labelText="Select a patient"
+							optionTemplate={(item) => (
+								<MediaObject verticalAlign="center">
+									<MediaBody>
+										<Text as="span" fontStyle="italic" color="colorTextWeak">
+											{item.firstName} {item.lastName}
+										</Text>
+										<Text as="span">
+											({item.dob})
+										</Text>
+									</MediaBody>
+								</MediaObject>
+							)}
+							selectedItem={patient}
+							inputValue={value}
+							onSelectedItemChange={changes => {
+								const {selectedItem} = changes;
+								setPatient(selectedItem);
+								setValue(`${selectedItem.firstName} ${selectedItem.lastName} (${selectedItem.dob})`);
+							}}
+						/>
+						
 						<div>
 							<Label htmlFor="patient_first_name" required>First Name</Label>
 							<Input
@@ -80,7 +136,7 @@ export default function App() {
 							<HelpText id="dob_help_text">Enter your date of birth</HelpText>
 						</div>
 						
-						<Checkbox
+						{/*<Checkbox
 							id="allowSms"
 							value="allowSms"
 							name="allowSms"
@@ -88,9 +144,8 @@ export default function App() {
 							onChange={(event) => updatePatient({ allowSms: event.target.checked })}
 						>
 							Allow to send sms
-						</Checkbox>
+						</Checkbox>*/}
 						
-						<br/>
 						<Button
 							variant="primary"
 							onClick={submit}
@@ -115,11 +170,7 @@ export default function App() {
 						<OpenEmrStateFlags
 							text={'Allow Mail Message'}
 							selectedValue={patient.allowMailMessage }
-							onSelectedChange={(selected) => {
-								console.log('selected Allow Mail Message', selected);
-								
-								updatePatient({ allowMailMessage: selected })
-							}}
+							onSelectedChange={(selected) => updatePatient({ allowMailMessage: selected })}
 						/>
 						
 						<OpenEmrStateFlags
@@ -159,7 +210,7 @@ export default function App() {
 						/>
 					</Box>
 				</Flex>
-			</Flex>
+			</Flex>}
 		</Theme.Provider>
 	);
 }

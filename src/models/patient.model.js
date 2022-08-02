@@ -4,7 +4,7 @@ export class PatientModel {
 	firstName = '';
 	lastName = '';
 	dob = '';
-	allowSms = true;
+	// allowSms = true;
 	allowEmail = OPEN_EMR_STATE_VALUES.unassigned;
 	allowMailMessage = OPEN_EMR_STATE_VALUES.unassigned;
 	allowVoiceMessage = OPEN_EMR_STATE_VALUES.unassigned;
@@ -12,5 +12,5 @@ export class PatientModel {
 	hipaaNoticeReceived = OPEN_EMR_STATE_VALUES.unassigned;
 	allowImmunizationRegistryUse = OPEN_EMR_STATE_VALUES.unassigned;
 	allowImmunizationInfoSharing = OPEN_EMR_STATE_VALUES.unassigned;
-	allowHealthInformationExchange = OPEN_EMR_STATE_VALUES.unassigned;
+	allowHealthInformationExchange = OPEN_EMR_STATE_VALUES.unassigned
 }
