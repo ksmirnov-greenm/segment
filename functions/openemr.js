@@ -43,7 +43,7 @@ exports.handler = async function (context, event, callback) {
 				errorObject: "No cmd included.",
 			};
 		}
-		if (event.cmd == 'get') {
+		if (event.cmd === 'get') {
 			const patients = await getPatients(
 				context,
 				access_token_info,
@@ -51,7 +51,7 @@ exports.handler = async function (context, event, callback) {
 				event
 			);
 			response.setBody(patients);
-		} else if (event.cmd == 'save') {
+		} else if (event.cmd === 'save') {
 			const patient = await updatePatient(
 				context,
 				access_token_info,
