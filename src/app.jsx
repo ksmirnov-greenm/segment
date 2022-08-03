@@ -15,6 +15,9 @@ import {
 import { Theme } from '@twilio-paste/theme';
 import { OpenEmrStateFlags } from "./components/openemr-state-flags";
 import { PatientModel } from "./models/patient.model";
+import {Header} from "./components/header";
+import {Footer} from "./components/footer";
+
 
 export default function App() {
 	
@@ -39,7 +42,7 @@ export default function App() {
 		setPatient(Object.assign({}, patient, newValue))
 	}
 	
-	useEffect(() => {
+	/*useEffect(() => {
 		setLoadPatients(true);
 		fetch('/openemr',
 		{
@@ -55,11 +58,11 @@ export default function App() {
 				setPatientsCollection(patients)
 				setLoadPatients(false);
 			})
-	}, []);
+	}, []);*/
 	
 	return (
 		<Theme.Provider>
-			
+			<Header />
 			<Flex marginTop={"space100"} hAlignContent="center" vertical>
 				<Heading as="h2" variant="heading20" padding="space40">Patient Info</Heading>
 				{loadPatients && <p>Load patients collection</p>}
@@ -218,6 +221,7 @@ export default function App() {
 					</Box>
 				</Flex>
 			</Flex>}
+			<Footer />
 		</Theme.Provider>
 	);
 }
