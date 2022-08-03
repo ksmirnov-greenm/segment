@@ -41,9 +41,16 @@ export default function App() {
 	
 	useEffect(() => {
 		setLoadPatients(true);
-		fetch('/patients')
+		fetch('/openemr',
+		{
+			method: "POST",
+			body: new URLSearchParams({
+			  cmd: "get",
+			}),
+		  }	
+	)
 			.then(res => res.json())
-			.then(({ patients }) => {
+			.then((patients) => {
 				console.log('patient response', patients);
 				setPatientsCollection(patients)
 				setLoadPatients(false);
