@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const Headers = require("node-fetch").Headers;
 
 exports.handler = async function (context, event, callback) {
-	context.OPENEMR_NGROK_HOSTNAME = 'kzaviryukha.ngrok.io'; //https://kzaviryukha.ngrok.io/
+	context.OPENEMR_NGROK_HOSTNAME = 'localhost'; //https://kzaviryukha.ngrok.io/
 	const response = new Twilio.Response();
 	response.appendHeader("Access-Control-Allow-Origin", "*");
 	response.appendHeader("Access-Control-Allow-Methods", "OPTIONS, POST");
@@ -170,9 +170,11 @@ const getPatients = (context, access_token_info, client_id, event) => {
 const updatePatient = (context, access_token_info, client_id, event) => {
 	const { access_token } = access_token_info;
 
-	const fname = event.firstName;
-	const lname = event.lastName;
-	const dob = event.dob;
+	const patient = event.traits;
+
+	const fname = patient.firstName;
+	const lname = patient.lastName;
+	const dob = patient.dob;
 
 	//validation
 	if (!lname || !fname || !dob) {
@@ -194,15 +196,15 @@ const updatePatient = (context, access_token_info, client_id, event) => {
 				return 'Patient not found!';
 			}
 			const updatedData = {};
-			updatedData.hipaa_notice = map_flag_in(event.hipaaNoticeReceived);
+			updatedData.hipaa_notice = map_flag_in(patient.hipaaNoticeReceived);
 			//data.data.hipaa_allowsms = 'NO'; //some internal issue,also does not work in app
-			updatedData.hipaa_allowemail = map_flag_in(event.allowEmail);
-			updatedData.hipaa_mail = map_flag_in(event.allowMailMessage);
-			updatedData.hipaa_voice = map_flag_in(event.allowVoiceMessage);
-			updatedData.allow_imm_reg_use = map_flag_in(event.allowImmunizationRegistryUse);
-			updatedData.allow_imm_info_share = map_flag_in(event.allowImmunizationInfoSharing);
-			updatedData.allow_health_info_ex = map_flag_in(event.allowHealthInformationExchange);
-			updatedData.allow_patient_portal = map_flag_in(event.allowPatientPortal);
+			updatedData.hipaa_allowemail = map_flag_in(patient.allowEmail);
+			updatedData.hipaa_mail = map_flag_in(patient.allowMailMessage);
+			updatedData.hipaa_voice = map_flag_in(patient.allowVoiceMessage);
+			updatedData.allow_imm_reg_use = map_flag_in(patient.allowImmunizationRegistryUse);
+			updatedData.allow_imm_info_share = map_flag_in(patient.allowImmunizationInfoSharing);
+			updatedData.allow_health_info_ex = map_flag_in(patient.allowHealthInformationExchange);
+			updatedData.allow_patient_portal = map_flag_in(patient.allowPatientPortal);
 
 			return fetch(
 				`http://${context.OPENEMR_NGROK_HOSTNAME}/apis/default/api/patient/${data.data[0].uuid}`,
