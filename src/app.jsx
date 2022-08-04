@@ -15,19 +15,19 @@ import {
 import { Theme } from '@twilio-paste/theme';
 import { OpenEmrStateFlags } from "./components/openemr-state-flags";
 import { PatientModel } from "./models/patient.model";
-import {Header} from "./components/header";
-import {Footer} from "./components/footer";
+import { Header } from "./components/header";
+import { Footer } from "./components/footer";
 
 
 export default function App() {
-	
+
 	const [patient, setPatient] = useState(new PatientModel());
 	const [patientsCollection, setPatientsCollection] = useState([]);
 	const [value, setValue] = React.useState('');
-	
+
 	const [loadPatients, setLoadPatients] = useState(false);
 	const [loading, setLoading] = useState(false);
-	
+
 	const submit = () => {
 		setLoading(true);
 		console.log('patient', patient);
@@ -37,51 +37,47 @@ export default function App() {
 				// setPatient(new PatientModel());
 			});
 	}
-	
+
 	const updatePatient = (newValue) => {
 		setPatient(Object.assign({}, patient, newValue))
+		console.log(patient);
 	}
-	
-	/*useEffect(() => {
+
+	useEffect(() => {
 		setLoadPatients(true);
 		fetch('/openemr',
-		{
-			method: "POST",
-			body: new URLSearchParams({
-			  cmd: "get",
-			}),
-		  }	
-	)
+			{
+				method: "POST",
+				body: new URLSearchParams({
+					cmd: "get",
+				}),
+			}
+		)
 			.then(res => res.json())
 			.then((patients) => {
 				console.log('patient response', patients);
 				setPatientsCollection(patients)
 				setLoadPatients(false);
 			})
-	}, []);*/
-	
+	}, []);
+
 	return (
 		<Theme.Provider>
 			<Header />
-			<Flex marginTop={"space100"} hAlignContent="center" vertical>
-				<Heading as="h2" variant="heading20" padding="space40">Patient Info</Heading>
-				{loadPatients && <p>Load patients collection</p>}
-				{loadPatients && <Spinner size="sizeIcon110" decorative={false} title="Loading" />}
-			</Flex>
-			{!loadPatients && <Flex margin="auto" width={"800px"}>
-				<Flex>
-					<Box
-						padding="space40"
-						width="400px"
-						height="500px"
-						display="flex"
-						flexDirection="column"
-						justifyContent="space-between"
-					>
-						
+			<Flex marginLeft="200px" marginTop={"space100"} hAlignContent="left" vertical>
+
+				<Heading as="h2" variant="heading20" padding="space20">Patient Info</Heading>
+				{!loadPatients && <Box>
+
+					<Box marginTop="8px" color="#8891AA" fontWeight="600" fontSize="14px" >
+						Choose Patient
+			</Box>
+					<Box marginBottom="24px" width="300px">
 						<Combobox
+							backgroundColor="#F4F4F6"
 							items={patientsCollection}
-							labelText="Select a patient"
+							placeholder="Click to choose patient"
+
 							optionTemplate={(item) => (
 								<MediaObject verticalAlign="center">
 									<MediaBody>
@@ -97,131 +93,140 @@ export default function App() {
 							selectedItem={patient}
 							inputValue={value}
 							onSelectedItemChange={changes => {
-								const {selectedItem} = changes;
+								const { selectedItem } = changes;
 								setPatient(selectedItem);
 								setValue(`${selectedItem.firstName} ${selectedItem.lastName} (${selectedItem.dob})`);
 							}}
 						/>
-						
-						<div>
-							<Label htmlFor="patient_first_name" required>First Name</Label>
-							<Input
-								aria-describedby="patient_help_text"
-								id="patient_first_name"
-								name="patient_first_name"
-								type="text"
-								placeholder="John"
-								value={patient.firstName}
-								onChange={(event) => updatePatient({ firstName: event.target.value })}
-								required/>
-							<HelpText id="patient_help_text">Enter your first name</HelpText>
-						</div>
-						
-						<div>
-							<Label htmlFor="patient_last_name" required>Last Name</Label>
-							<Input
-								aria-describedby="last_name_help_text"
-								id="patient_last_name"
-								name="patient_last_name"
-								type="text"
-								placeholder="Doe"
-								value={patient.lastName}
-								onChange={(event) => updatePatient({ lastName: event.target.value })}
-								required/>
-							<HelpText id="last_name_help_text">Enter your family name</HelpText>
-						</div>
-						
-						<div>
-							<Label htmlFor="patient_dob" required>Date of Birth</Label>
-							<Input
-								aria-describedby="dob_help_text"
-								id="patient_dob"
-								name="patient_dob"
-								type="text"
-								placeholder="01-01-2000"
-								value={patient.dob}
-								onChange={(event) => updatePatient({ dob: event.target.value })}
-								required
-							/>
-							<HelpText id="dob_help_text">Enter your date of birth</HelpText>
-						</div>
-						
-						{/*<Checkbox
-							id="allowSms"
-							value="allowSms"
-							name="allowSms"
-							checked={patient.allowSms}
-							onChange={(event) => updatePatient({ allowSms: event.target.checked })}
-						>
-							Allow to send sms
-						</Checkbox>*/}
-						
-						<Button
-							variant="primary"
-							onClick={submit}
-							disabled={!patient.firstName && !patient.lastName && !patient.dob}
-							loading={loading}
-						>
-							Submit
-						</Button>
 					</Box>
-				</Flex>
-				<Flex>
-					<Box
-						padding="space40"
-						width="400px"
+
+
+					{patient.firstName && patient.lastName && patient.dob && <Box>
+						<Box marginTop="8px" color="#8891AA" fontWeight="600" fontSize="14px" >
+							Please update data for chosen patient
+			</Box>
+						<Box marginTop="8px" display="flex" columnGap="16px" marginBottom="24px">
+
+							<div>
+								<Input
+									disabled="true"
+									backgroundColor="#F4F4F6"
+									aria-describedby="patient_help_text"
+									id="patient_first_name"
+									name="patient_first_name"
+									type="text"
+									placeholder="John"
+									value={patient.firstName}
+									onChange={(event) => updatePatient({ firstName: event.target.value })}
+									required />
+							</div>
+
+							<div>
+								<Input
+									disabled="true"
+									backgroundColor="#F4F4F6"
+									aria-describedby="last_name_help_text"
+									id="patient_last_name"
+									name="patient_last_name"
+									type="text"
+									placeholder="Doe"
+									value={patient.lastName}
+									onChange={(event) => updatePatient({ lastName: event.target.value })}
+									required />
+							</div>
+
+							<div>
+								<Input
+									disabled="true"
+									backgroundColor="#F4F4F6"
+									aria-describedby="dob_help_text"
+									id="patient_dob"
+									name="patient_dob"
+									type="text"
+									placeholder="01-01-2000"
+									value={patient.dob}
+									onChange={(event) => updatePatient({ dob: event.target.value })}
+									required
+								/>
+							</div>
+						</Box>
+
+						<Box display="flex" columnGap="42px" >
+							<div>
+								<OpenEmrStateFlags
+									text={'Allow Email'}
+									selectedValue={patient.allowEmail}
+									onSelectedChange={(selected) => updatePatient({ allowEmail: selected })}
+								/>
+
+								<OpenEmrStateFlags
+									text={'Allow Mail Message'}
+									selectedValue={patient.allowMailMessage}
+									onSelectedChange={(selected) => updatePatient({ allowMailMessage: selected })}
+								/>
+
+								<OpenEmrStateFlags
+									text={'Allow Voice Message'}
+									selectedValue={patient.allowVoiceMessage}
+									onSelectedChange={(selected) => updatePatient({ allowVoiceMessage: selected })}
+								/>
+							</div>
+							<div>
+
+								<OpenEmrStateFlags
+									text={'Allow Patient Portal'}
+									selectedValue={patient.allowPatientPortal}
+									onSelectedChange={(selected) => updatePatient({ allowPatientPortal: selected })}
+								/>
+
+								<OpenEmrStateFlags
+									text={'Hipaa Notice Received'}
+									selectedValue={patient.hipaaNoticeReceived}
+									onSelectedChange={(selected) => updatePatient({ hipaaNoticeReceived: selected })}
+								/>
+
+								<OpenEmrStateFlags
+									text={'Allow Immunization Registry Use'}
+									selectedValue={patient.allowImmunizationRegistryUse}
+									onSelectedChange={(selected) => updatePatient({ allowImmunizationRegistryUse: selected })}
+								/>
+							</div>
+							<div>
+
+
+								<OpenEmrStateFlags
+									text={'Allow Immunization Info Sharing'}
+									selectedValue={patient.allowImmunizationInfoSharing}
+									onSelectedChange={(selected) => updatePatient({ allowImmunizationInfoSharing: selected })}
+								/>
+
+								<OpenEmrStateFlags
+									text={'Allow Health Information Exchange'}
+									selectedValue={patient.allowHealthInformationExchange}
+									onSelectedChange={(selected) => updatePatient({ allowHealthInformationExchange: selected })}
+								/>
+							</div>
+
+
+						</Box>
+					</Box>}
+			</Box>}
+			</Flex>
+				{patient.firstName && patient.lastName && patient.dob && <Flex margin="auto" marginLeft="200px">
+					<Button
+						variant="primary"
+						onClick={submit}
+						disabled={!patient.firstName && !patient.lastName && !patient.dob}
+						loading={loading}
 					>
-						<OpenEmrStateFlags
-							text={'Allow Email'}
-							selectedValue={patient.allowEmail}
-							onSelectedChange={(selected) => updatePatient({ allowEmail: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Mail Message'}
-							selectedValue={patient.allowMailMessage }
-							onSelectedChange={(selected) => updatePatient({ allowMailMessage: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Voice Message'}
-							selectedValue={patient.allowVoiceMessage}
-							onSelectedChange={(selected) => updatePatient({ allowVoiceMessage: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Patient Portal'}
-							selectedValue={patient.allowPatientPortal}
-							onSelectedChange={(selected) => updatePatient({ allowPatientPortal: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Hipaa Notice Received'}
-							selectedValue={patient.hipaaNoticeReceived}
-							onSelectedChange={(selected) => updatePatient({ hipaaNoticeReceived: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Immunization Registry Use'}
-							selectedValue={patient.allowImmunizationRegistryUse}
-							onSelectedChange={(selected) => updatePatient({ allowImmunizationRegistryUse: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Immunization Info Sharing'}
-							selectedValue={patient.allowImmunizationInfoSharing}
-							onSelectedChange={(selected) => updatePatient({ allowImmunizationInfoSharing: selected })}
-						/>
-						
-						<OpenEmrStateFlags
-							text={'Allow Health Information Exchange'}
-							selectedValue={patient.allowHealthInformationExchange}
-							onSelectedChange={(selected) => updatePatient({ allowHealthInformationExchange: selected })}
-						/>
-					</Box>
-				</Flex>
-			</Flex>}
-			<Footer />
+						Submit
+						</Button>
+				</Flex>}
+
+				{loadPatients && <Box marginLeft="200px" marginTop="10px" >
+					<p>Load patients</p>
+					<Spinner size="sizeIcon110" decorative={false} title="Loading" /></Box>}
+				<Footer />
 		</Theme.Provider>
-	);
-}
+			);
+		}

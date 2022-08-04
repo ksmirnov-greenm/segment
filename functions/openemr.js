@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const Headers = require("node-fetch").Headers;
 
 exports.handler = async function (context, event, callback) {
-	context.OPENEMR_NGROK_HOSTNAME = 'localhost'; //https://kzaviryukha.ngrok.io/
+	context.OPENEMR_NGROK_HOSTNAME = 'kzaviryukha.ngrok.io'; //https://kzaviryukha.ngrok.io/
 	const response = new Twilio.Response();
 	response.appendHeader("Access-Control-Allow-Origin", "*");
 	response.appendHeader("Access-Control-Allow-Methods", "OPTIONS, POST");

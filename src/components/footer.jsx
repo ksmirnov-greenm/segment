@@ -4,7 +4,8 @@ import {Button} from "@twilio-paste/core";
 import {Link} from "./link";
 
 const Styles = styled.footer`
-  position: absolute;
+	position: absolute;
+	bottom: 0px;
   width: 100%; //1440px;
   height: 113px;
   //bottom: 10px;

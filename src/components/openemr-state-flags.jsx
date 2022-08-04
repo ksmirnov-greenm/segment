@@ -7,11 +7,19 @@ import {styled} from '@twilio-paste/styling-library';
 
 const Styles = styled.div`
 	[data-paste-element="RADIO_GROUP"] {
-		margin-bottom: 10px;
+		margin-bottom: 25px;
+		font-size: 12px!important;
+
+	}
+	[data-paste-element="MEDIA_BODY"] {
+		font-size: 12px;
+	}
+	[data-paste-element="RADIO_LABEL_TEXT"] {
+		font-size: 12px;
 	}
 	[data-paste-element="RADIO_GROUP_SET"] {
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-between;
 	}
 `;
 
